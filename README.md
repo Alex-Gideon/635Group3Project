@@ -32,3 +32,7 @@ https://docs.anaconda.com/free/miniconda/index.html#latest-miniconda-installer-l
 
 # Data
 The data is too large to be stored on git. You must download it manually from my super cool awesome google drive. Wow!
+
+https://drive.google.com/drive/folders/19UZ1r7dx4vNYeFTAc1blgahwxlMmR_ig?usp=drive_link 
+
+(If you dont have access please ping me...)
