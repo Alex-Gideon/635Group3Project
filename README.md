@@ -29,3 +29,6 @@ Aftewards run:
 
 If you aren't on linux, follow the quick command line install links at the bottom of this page.
 https://docs.anaconda.com/free/miniconda/index.html#latest-miniconda-installer-links
+
+# Data
+The data is too large to be stored on git. You must download it manually from my super cool awesome google drive. Wow!
