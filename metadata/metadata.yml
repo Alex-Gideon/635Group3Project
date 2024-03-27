@@ -1,0 +1,13 @@
+metadata_version: 1
+name: Sentiment Analysis Using Ensemble-Hybrid Model with Hypernym Based Feature Engineering
+description: Determining the sentiment of user reviews of movies and using that to predict the ratings given in the reviews.
+authors:
+- name: Sashank Sridhar
+  affiliations:
+  - name: Anna University
+- name: Sowmya Sanagavarapu
+  affiliations:
+  - name: Anna University
+corresponding_contributor:
+  name: Sashank Sridhar
+  email: sashank.ssridhar@gmail.com
