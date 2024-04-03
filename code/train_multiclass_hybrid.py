@@ -201,5 +201,5 @@ model2.compile(optimizer=Adam(lr=1e-3),
                loss='binary_crossentropy',
               metrics=['accuracy'])
 x_train = np.array([np.array(token) for token in train_docs])
-model2.fit([x_train,x_train1], [np.array(y1),np.array(y2),np.array(y3),np.array(y4),np.array(y7),np.array(y8),np.array(y9),np.array(y10)], epochs=1, batch_size=512)
+model2.fit([x_train,x_train1], [np.array(y1),np.array(y2),np.array(y3),np.array(y4),np.array(y7),np.array(y8),np.array(y9),np.array(y10)], epochs=10, batch_size=512)
 model2.save("results/multiclass_hybrid.h5")

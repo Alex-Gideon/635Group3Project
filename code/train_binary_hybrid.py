@@ -95,7 +95,7 @@ def encode_sentence(tokens, emb_size):
 x_train1 = scale(np.concatenate([encode_sentence(ele, 200) for ele in map(lambda x: x, rowsx1)]))
 print(x_train1.shape)
 
-
+# this is the same code as in bilstm
 input_tensor = Input(shape=(SEQ_LEN,), dtype='int32')
 e = Embedding(vocab_size, 300, input_length=SEQ_LEN, trainable=True)(input_tensor)
 x = Bidirectional(LSTM(128, return_sequences=True))(e)
@@ -103,9 +103,10 @@ x = Bidirectional(LSTM(64, return_sequences=False))(x)
 x = Dense(64, activation='relu')(x)
 output_tensor = Dense(1, activation='sigmoid')(x)
 model = Model(input_tensor, output_tensor)
+####
 
 yx = np.array(yx)
-
+## ANN?
 visible = Input(shape=(200,))
 
 c1 = Dense(256,activation='relu')(visible)
@@ -118,7 +119,7 @@ c7 = Dense(512,activation='relu')(c6)
 c8 = Dense(256,activation='relu')(c7)
 s1 = Dense(1,activation='sigmoid')(c8)
 model1 = Model(inputs=visible,outputs=s1)
-
+##ANN
 combined = Concatenate()([model.output, model1.output])
 mix1 = Dense(100,activation='relu')(combined)
 mix2 = Dense(50,activation='relu')(mix1)
@@ -130,5 +131,5 @@ model2.compile(optimizer=Adam(lr=1e-3),
               loss='binary_crossentropy',
               metrics=['accuracy'])
 
-model2.fit([x_train,x_train1], yx, epochs=1, batch_size=512)
+model2.fit([x_train,x_train1], yx, epochs=10, batch_size=512)
 model2.save("results/binary_hybrid.h5")
