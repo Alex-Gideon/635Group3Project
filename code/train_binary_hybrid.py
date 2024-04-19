@@ -50,7 +50,7 @@ with open("data/train_binary_hybrid_ANN_data.csv", 'r', encoding='latin1') as cs
                     rows1.append(j)
         del (row[0])
         rowsx1.append(rows1)
-
+## BILSTM
 t = Tokenizer()
 
 t.fit_on_texts(rowsx)
@@ -63,7 +63,11 @@ SEQ_LEN = 80
 padded_train = pad_sequences(encoded_train_set, maxlen=SEQ_LEN, padding='post')
 
 train_docs = [list(doc) for doc in padded_train]
+#### BILSTM
+
 x_train = np.array([np.array(token) for token in train_docs])
+
+### ANN
 embeddings = Word2Vec(size=200, min_count=3)
 embeddings.build_vocab([sentence for sentence in rowsx1])
 embeddings.train([sentence for sentence in rowsx1],
@@ -74,6 +78,7 @@ gen_tfidf = TfidfVectorizer(analyzer=lambda x: x, min_df=3)
 matrix = gen_tfidf.fit_transform([sentence   for sentence in rowsx1])
 tfidf_map = dict(zip(gen_tfidf.get_feature_names(), gen_tfidf.idf_))
 print(len(tfidf_map))
+### ANN
 
 def encode_sentence(tokens, emb_size):
     _vector = np.zeros((1, emb_size))
@@ -91,7 +96,7 @@ def encode_sentence(tokens, emb_size):
 
     return _vector
 
-
+### ANN TRAIN
 x_train1 = scale(np.concatenate([encode_sentence(ele, 200) for ele in map(lambda x: x, rowsx1)]))
 print(x_train1.shape)
 
