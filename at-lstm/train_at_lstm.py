@@ -1,8 +1,10 @@
+import time
+
 import at_lstm
 from preprocess import *
 
 
-def get_training_data(sample_size=50, sequence_max_len=80):
+def get_training_data(sample_size=50):
     filename = 'datasets/IMDB Dataset.csv'
     df = pd.read_csv(filename, nrows=sample_size)
 
@@ -11,21 +13,23 @@ def get_training_data(sample_size=50, sequence_max_len=80):
               .apply(tokenize)
               .apply(remove_stop_words))
 
-    tokenizer.fit_on_texts(tokens)
-    encoded_sentences = tokenizer.texts_to_sequences(tokens)
-    padded_sentences = (tf.keras.preprocessing.sequence.
-                        pad_sequences(encoded_sentences,
-                                      maxlen=sequence_max_len,
-                                      padding='post'))
     labels = df['sentiment'].apply(standardize)
-    return padded_sentences, labels
+    return tokens, labels
 
 
 if __name__ == '__main__':
-    padded_text_sequences, y_train = get_training_data()
-    x_train = provide_word_embeddings(padded_text_sequences)
+    start = time.time()
+    cleaned_texts, y_train = get_training_data(sample_size=1000)
+
+    x_train = provide_word_embeddings(cleaned_texts)
+    elapsed = time.time() - start
+    print(f'data preparation time = {elapsed}; done.')
 
     model = at_lstm.build_model()
-    model.fit(x_train, y_train, epochs=5)
+    model.fit(x_train, y_train,
+              batch_size=100,
+              epochs=10,
+              validation_split=0.3,
+              use_multiprocessing=True)
 
     print('training done.')

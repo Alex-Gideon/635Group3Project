@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import tensorflow as tf
 import tensorflow_text as tf_text
 from bs4 import BeautifulSoup as beauty
@@ -33,12 +32,12 @@ def standardize(input_label):
 
 def provide_word_embeddings(text_sequences):
     wv = KeyedVectors.load('models/w2v.glove.model')
-
+    sequence_max_len = 80
     word_embeddings = []
     for seq in text_sequences:
         vector = [wv[word] for word in seq if word in wv]
-        word_embeddings.append(vector)
+        if len(vector) < sequence_max_len:
+            vector += [[0.0] * wv.vector_size for _ in range(sequence_max_len - len(vector))]
+        word_embeddings.append(vector[:sequence_max_len])
 
     return np.array(word_embeddings)
-
-
