@@ -3,8 +3,9 @@ import pandas as pd
 import os
 import at_lstm
 from preprocess import *
+import random
 SEED = 0
-
+random.seed(SEED)
 def get_training_data(sample_size=50):
     filepath = os.path.join("datasets","IMDBDataset.csv")
     df = pd.read_csv(filepath)
