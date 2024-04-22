@@ -8,7 +8,7 @@ import csv
 from keras.models import load_model
 import numpy as np
 from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from keras_preprocessing.sequence import pad_sequences
 from collections import Counter
 
 rowsx = []

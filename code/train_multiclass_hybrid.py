@@ -1,7 +1,7 @@
 import csv
 import numpy as np
 from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from keras_preprocessing.sequence import pad_sequences
 from keras.models import Sequential,Model
 from keras.layers import Dense, Input, Concatenate
 from keras.layers import LSTM,Embedding,Bidirectional

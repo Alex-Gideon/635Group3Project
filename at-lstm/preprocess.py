@@ -4,6 +4,8 @@ import tensorflow as tf
 from bs4 import BeautifulSoup as beauty
 from gensim.models import KeyedVectors
 from nltk.corpus import stopwords
+import nltk
+import re
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))

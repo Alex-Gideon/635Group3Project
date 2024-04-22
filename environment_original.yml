@@ -1,4 +1,4 @@
-name: 635Proj
+name: 635Proj_original
 channels:
   - conda-forge
 dependencies:
