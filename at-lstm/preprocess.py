@@ -1,14 +1,14 @@
 import numpy as np
 import tensorflow as tf
-import tensorflow_text as tf_text
+# import tensorflow_text as tf_text
 from bs4 import BeautifulSoup as beauty
 from gensim.models import KeyedVectors
 from nltk.corpus import stopwords
 
-# nltk.download('stopwords')
-stop_words = stopwords.words('english')
+nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
 
-word_tokenizer = tf_text.UnicodeScriptTokenizer()
+# word_tokenizer = tf_text.UnicodeScriptTokenizer()
 tokenizer = tf.keras.preprocessing.text.Tokenizer()
 
 
@@ -17,17 +17,29 @@ def remove_html_tags(row):
 
 
 def tokenize(input_text):
-    tokens = word_tokenizer.tokenize(input_text)
-    return [token.numpy().decode('utf-8') for token in tokens]
+    tokens = re.sub('[^a-zA-Z]', ' ', input_text).lower().split()
+
+    # tokens = word_tokenizer.tokenize(input_text)
+    return tokens
 
 
 def remove_stop_words(input_text_vector):
-    filtered = list(filter(lambda word: word.isalnum() and word.lower() not in stop_words, input_text_vector))
-    return list(map(lambda word: word.lower(), filtered))
+    filtered = []
+    for word in input_text_vector:
+        if word.isalpha() and word not in stop_words:
+            filtered.append(word)
+    return filtered
 
 
 def standardize(input_label):
     return 1 if input_label == 'positive' else 0
+
+
+def all_at_once(input_text):
+    cleaned = remove_html_tags(input_text)
+    cleaned = tokenize(cleaned)
+    cleaned = remove_stop_words(cleaned)
+    return cleaned
 
 
 def provide_word_embeddings(text_sequences):
