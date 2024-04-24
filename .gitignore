@@ -5,3 +5,4 @@ Testing/aclImdb
 Testing/aclImdb_v1.tar.gz
 /at-lstm/datasets/
 /at-lstm/models/
+/at-lstm/__pycache__
