@@ -40,7 +40,7 @@ def all_at_once(input_text):
 
 
 def provide_word_embeddings(text_sequences):
-    wv = KeyedVectors.load('models/w2v.glove.model')
+    wv = KeyedVectors.load('experiment-2/models/w2v.glove.model')
     sequence_max_len = 80
     word_embeddings = []
     for seq in text_sequences:

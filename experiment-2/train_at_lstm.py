@@ -11,7 +11,7 @@ random.seed(SEED)
 
 
 def get_training_data(sample_size=50):
-    filepath = os.path.join("datasets","IMDBDataset.csv")
+    filepath = 'experiment-2/datasets/IMDBDataset.csv'
     df = pd.read_csv(filepath)
     
     sampled_df = df.sample(n=sample_size, random_state=SEED)
@@ -39,5 +39,5 @@ if __name__ == '__main__':
               epochs=10,
               validation_split=0.3,
               use_multiprocessing=True)
-
+    # TODO save best model
     print('training done.')
