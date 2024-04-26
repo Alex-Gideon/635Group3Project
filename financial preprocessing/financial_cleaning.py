@@ -18,9 +18,11 @@ pretty_df = pretty_df.drop(["Date_published", "Headline", "Synopsis"], axis=1)
 
 pretty_df.head(5)
 
-pretty_df["Score"] = pretty_df["Final Status"].apply(
-    lambda x: "10" if x == "Positive" else "1" if x == "Negative" else "7"
-    )
+#pretty_df["Score"] = pretty_df["Final Status"].apply(
+#    lambda x: "10" if x == "Positive" else "1" if x == "Negative" else "7"
+#    )
+
+pretty_df['Final Status'] = pretty_df['Final Status'].apply(lambda x: x.lower() if isinstance(x, str) else x)
 
 pretty_df.head(5)
 
@@ -43,7 +45,7 @@ word_list = []
 labels = []
 
 for index, row in pretty_df.iterrows():
-  label = row['Score']
+  label = row['Final Status']#row['Score']
   line = ''.join(filter(lambda x: x.isalpha() or x.isspace(), row['Full_text']))
   line = line.replace("\n", " ")
   line = line.replace("â", "")
@@ -59,7 +61,7 @@ cleaned_df = pd.DataFrame(dict)
 
 cleaned_df.head(5)
 
-cleaned_df.to_csv('../experiment-1/financial/datasets/clean_financialpc.csv', index=False)
+cleaned_df.to_csv('../experiment-1/financial/datasets/clean_financialpc_notnum.csv', index=False)
 
 """**PhraseBook Cleaning**"""
 
@@ -69,10 +71,11 @@ df.head(5)
 
 df.info()
 
-df["Score"] = df["Status"].apply(
-    lambda x: "10" if x == "positive" else "1" if x == "negative" else "7"
-    )
+#df["Score"] = df["Status"].apply(
+#    lambda x: "10" if x == "positive" else "1" if x == "negative" else "7"
+#    )
 
+df['Status'] = df['Status'].apply(lambda x: x.lower() if isinstance(x, str) else x)
 df.head(5)
 
 df.info()
@@ -98,7 +101,7 @@ word_list = []
 labels = []
 
 for index, row in df.iterrows():
-  label = row['Score']
+  label = row['Status']#row['Score']
   line = ''.join(filter(lambda x: x.isalpha() or x.isspace(), row['Text']))
   line = line.replace("\n", " ")
   line = line.replace("â", "")
@@ -114,4 +117,4 @@ cleaned_df = pd.DataFrame(dict)
 
 cleaned_df.head(5)
 
-cleaned_df.to_csv('../experiment-1/financial/datasets/clean_financialfull.csv', index=False)
+cleaned_df.to_csv('../experiment-1/financial/datasets/clean_financialfull_notnum.csv', index=False)
