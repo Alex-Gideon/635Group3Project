@@ -82,16 +82,6 @@ def encode_text_hypernyms(tfidf_map, word_embedding_model, text_hypernyms):
     return vector
 
 
-def provide_text_sentiment_df(dataset_idx=1):
-    if dataset_idx == 1:
-        df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1", header=None)
-        df.columns = ['sentiment', 'text']
-        df = df[df['sentiment'] != 'neutral']
-        return df
-    elif dataset_idx == 0:
-        # TODO 
-        return
-
 def print_dataframes(dataframes):
     for key, df in dataframes.items():
         print(f"DataFrame: {key}")
@@ -122,8 +112,14 @@ def get_testing_data(df_dict):
     
     x_test_ann = np.asarray(x_test_ann).reshape(len(big_ann_df), 200)
    
-    y_true = big_bilstm_df['sentiment'].to_numpy().reshape(-1, 1)
+    y_true = big_bilstm_df['sentiment'].astype(int).to_numpy().reshape(-1, 1)
 
+    for i in range(0,len(y_true)):
+        if int(y_true[i])<=4:
+            y_true[i] = 0
+        else:
+            y_true[i] = 1
+    
     return x_text_bilstm, x_test_ann, y_true
 
 
@@ -134,10 +130,11 @@ if __name__ == '__main__':
     # bilstm_input, ann_input, y_true = get_testing_data()
     print('preprocessing done.')
 
-    filepath = 'experiment-1/models/binary_hybrid.h5'
+    filepath = 'experiment-1/models/binary_hybrid_larger.h5'
     ensemble_model = load_model(filepath=filepath)
     print('loaded the model')
-
+    print(bilstm_input.shape)
+    print(ann_input.shape)
 
     y_pred = ensemble_model.predict([bilstm_input, ann_input])
     y_pred = [0 if pred[0] < 0.5 else 1 for pred in y_pred]

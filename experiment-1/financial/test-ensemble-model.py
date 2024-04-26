@@ -166,7 +166,8 @@ if __name__ == '__main__':
     filepath = 'experiment-1/models/binary_hybrid.h5'
     ensemble_model = load_model(filepath=filepath)
     print('loaded the model')
-
+    print(bilstm_input.shape)
+    print(ann_input.shape)
 
     y_pred = ensemble_model.predict([bilstm_input, ann_input])
     y_pred = [0 if pred[0] < 0.5 else 1 for pred in y_pred]
