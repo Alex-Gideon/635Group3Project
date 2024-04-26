@@ -22,6 +22,11 @@ stop_words = set(stopwords.words('english'))
 SEED = 42
 random.seed(SEED)
 
+TESTING_DATASETS = [
+    'experiment-1/financial/datasets/financial-news-pretty-clean.csv',
+    'experiment-1/financial/datasets/financial-phrase-bank-all.csv'
+]
+
 def remove_html_tags(row):
     return beauty(row, 'html.parser').text
 
@@ -88,20 +93,26 @@ def encode_text_hypernyms(tfidf_map, word_embedding_model, text_hypernyms):
     return vector
 
 
+def provide_text_sentiment_df(dataset_idx=1):
+    if dataset_idx == 1:
+        df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1", header=None)
+        df.columns = ['sentiment', 'text']
+        df = df[df['sentiment'] != 'neutral']
+        return df
+    elif dataset_idx == 0:
+        # TODO 
+        return
+
+
+
 def get_testing_data():
-    filepath = os.path.join(os.getcwd(), "financial/datasets","financial-phrase-bank-all.csv")
-
-    df = pd.read_csv(filepath, encoding="ISO-8859-1", header=None)
-    df.columns = ['sentiment', 'text']
-
-    df = df[df['sentiment'] != 'neutral']
+    df = provide_text_sentiment_df()
 
     # remove stop words
     financial_text_tokens = (df['text']
                         .apply(remove_html_tags)
                         .apply(tokenize)
                         .apply(remove_stop_words)).tolist()
-    # print(f'og texts = {financial_text_tokens}')
     
     # pos tagging and filtering them
     tagged_texts = nltk.pos_tag_sents(financial_text_tokens)
@@ -152,7 +163,7 @@ if __name__ == '__main__':
     bilstm_input, ann_input, y_true = get_testing_data()
     print('preprocessing done.')
 
-    filepath = os.path.join(os.getcwd(), "models/binary_hybrid.h5")
+    filepath = 'experiment-1/models/binary_hybrid.h5'
     ensemble_model = load_model(filepath=filepath)
     print('loaded the model')
 
