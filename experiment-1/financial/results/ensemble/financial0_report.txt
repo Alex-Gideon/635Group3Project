@@ -1,18 +1,9 @@
 === Classification Report ===
               precision    recall  f1-score   support
 
-<<<<<<< HEAD
            0       0.41      0.08      0.13       184
            1       0.54      0.91      0.67       216
 
     accuracy                           0.53       400
    macro avg       0.47      0.49      0.40       400
 weighted avg       0.48      0.53      0.42       400
-=======
-           0       0.00      0.00      0.00       184
-           1       0.54      1.00      0.70       216
-
-    accuracy                           0.54       400
-   macro avg       0.27      0.50      0.35       400
-weighted avg       0.29      0.54      0.38       400
->>>>>>> b6d9d7638b96600d9b2c00ed7016f64cec5be230
