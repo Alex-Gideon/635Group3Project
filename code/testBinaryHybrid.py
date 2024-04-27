@@ -14,7 +14,7 @@ from collections import Counter
 rowsx = []
 yx = []
 
-with open("twitter preprocessing/big_tweets_bilstm.csv", 'r', encoding='latin1') as csv1:
+with open("data/train_binary_hybrid_BiLSTM_data.csv", 'r', encoding='latin1') as csv1:
     # creating a csv reader object
     csvreader1 = csv.reader(csv1)
     # extracting each data row one by one
@@ -37,7 +37,7 @@ for i in range(0,len(yx)):
 rowsx1 = []
 
 
-with open("twitter preprocessing/big_tweets_ANN.csv", 'r', encoding='latin1') as csv1:
+with open("data/train_binary_hybrid_ANN_data.csv", 'r', encoding='latin1') as csv1:
     # creating a csv reader object
     csvreader1 = csv.reader(csv1)
     # extracting each data row one by one
@@ -83,12 +83,12 @@ def encode_sentence(tokens, emb_size):
     return _vector
 
 
-model = load_model("results/binary_hybrid_tweets.h5")
+model = load_model("data/binary_hybrid.h5")
 
 rowsx_t_1 = []
 yx_1 = []
 
-with open("twitter preprocessing/small_tweets_bilstm.csv", 'r', encoding='latin1') as csv1:
+with open("experiment-1/tweets/datasets/big_tweets_bilstm.csv", 'r', encoding='latin1') as csv1:
     # creating a csv reader object
     csvreader1 = csv.reader(csv1)
 
@@ -113,7 +113,7 @@ for i in range(0,len(yx_1)):
 rowsx_t_2 = []
 
 
-with open("twitter preprocessing/small_tweets_ANN.csv", 'r', encoding='latin1') as csv1:
+with open("experiment-1/tweets/datasets/big_tweets_ANN.csv", 'r', encoding='latin1') as csv1:
     # creating a csv reader object
     csvreader1 = csv.reader(csv1)
     # extracting each data row one by one

@@ -23,12 +23,9 @@ SEED = 42
 random.seed(SEED)
 
 TESTING_DATASETS = [
-    'experiment-1/financial/datasets/financial-news-pretty-clean.csv',
-    'experiment-1/financial/datasets/financial-phrase-bank-all.csv'
+    'experiment-1/financial/datasets/clean_financialpc.csv',
+    'experiment-1/financial/datasets/clean_financialfull.csv'
 ]
-
-def remove_html_tags(row):
-    return beauty(row, 'html.parser').text
 
 
 def tokenize(input_text):
@@ -110,7 +107,6 @@ def get_testing_data():
 
     # remove stop words
     financial_text_tokens = (df['text']
-                        .apply(remove_html_tags)
                         .apply(tokenize)
                         .apply(remove_stop_words)).tolist()
     
@@ -166,7 +162,8 @@ if __name__ == '__main__':
     filepath = 'experiment-1/models/binary_hybrid.h5'
     ensemble_model = load_model(filepath=filepath)
     print('loaded the model')
-
+    print(bilstm_input.shape)
+    print(ann_input.shape)
 
     y_pred = ensemble_model.predict([bilstm_input, ann_input])
     y_pred = [0 if pred[0] < 0.5 else 1 for pred in y_pred]
