@@ -23,8 +23,8 @@ SEED = 42
 random.seed(SEED)
 
 TESTING_DATASETS = [
-    'experiment-1/financial/datasets/clean_financialpc.csv',
-    'experiment-1/financial/datasets/clean_financialfull.csv'
+    './datasets/clean_financialpc_notnum.csv',
+    './datasets/clean_financialfull_notnum.csv'
 ]
 
 
@@ -159,7 +159,7 @@ if __name__ == '__main__':
     bilstm_input, ann_input, y_true = get_testing_data()
     print('preprocessing done.')
 
-    filepath = 'experiment-1/models/binary_hybrid.h5'
+    filepath = '../models/binary_hybrid.h5'
     ensemble_model = load_model(filepath=filepath)
     print('loaded the model')
 
