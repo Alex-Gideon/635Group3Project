@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import nltk
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 nltk.download('stopwords')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
@@ -16,6 +16,8 @@ from keras_preprocessing.sequence import pad_sequences
 import numpy as np
 from gensim.models import Word2Vec
 from sklearn.feature_extraction.text import TfidfVectorizer
+import matplotlib.pyplot as plt
+
 
 
 stop_words = set(stopwords.words('english'))
@@ -23,8 +25,9 @@ SEED = 42
 random.seed(SEED)
 
 TESTING_DATASETS = [
-    './datasets/clean_financialpc_notnum.csv',
-    './datasets/clean_financialfull_notnum.csv'
+    'experiment-1/financial/datasets/financial-news-pretty-clean.csv',
+    'experiment-1/financial/datasets/financial-phrase-bank-all.csv',
+    'experiment-1/financial/datasets/twitter_financial_sentiment_data/data.csv'
 ]
 
 
@@ -49,6 +52,8 @@ def get_hypernym(word):
 
 
 def standardize(input_label):
+    if isinstance(input_label, int): return input_label
+    input_label = input_label.strip().lower()
     labels = {
         'positive': 1,
         'negative': 0,
@@ -90,20 +95,29 @@ def encode_text_hypernyms(tfidf_map, word_embedding_model, text_hypernyms):
     return vector
 
 
-def provide_text_sentiment_df(dataset_idx=1):
+def provide_text_sentiment_df(dataset_idx=0):
     if dataset_idx == 1:
         df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1", header=None)
         df.columns = ['sentiment', 'text']
         df = df[df['sentiment'] != 'neutral']
         return df
     elif dataset_idx == 0:
-        # TODO 
-        return
+        df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1")
+        print(df.columns)
+        df = df[['Headline', 'Final Status']]
+        df.columns = ['text', 'sentiment']
+        return df
+    elif dataset_idx == 2:
+        df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1")
+        df.columns = ['text', 'sentiment']
+        df = df[df['sentiment'] != 2]
+        print(df.shape)
+        return df
 
 
 
-def get_testing_data():
-    df = provide_text_sentiment_df()
+def get_testing_data(dataset):
+    df = provide_text_sentiment_df(dataset_idx=dataset)
 
     # remove stop words
     financial_text_tokens = (df['text']
@@ -131,6 +145,8 @@ def get_testing_data():
             hypernym = get_hypernym(word)
             if hypernym:
                 sentence_hypernyms.append(hypernym)
+            else:
+                sentence_hypernyms.append(word)
         text_hypernyms.append(sentence_hypernyms)
 
 
@@ -156,19 +172,23 @@ def get_testing_data():
 
 
 if __name__ == '__main__':
-    bilstm_input, ann_input, y_true = get_testing_data()
+    dataset = 0 # TODO CHANGE IF YOU WANT TO TEST A DIFF DATASET
+    bilstm_input, ann_input, y_true = get_testing_data(dataset)
     print('preprocessing done.')
 
-    filepath = '../models/binary_hybrid.h5'
+    filepath = 'experiment-1/models/binary_hybrid_larger.h5'
     ensemble_model = load_model(filepath=filepath)
     print('loaded the model')
-
+    print(bilstm_input.shape)
+    print(ann_input.shape)
 
     y_pred = ensemble_model.predict([bilstm_input, ann_input])
     y_pred = [0 if pred[0] < 0.5 else 1 for pred in y_pred]
 
-    print("=== Confusion Matrix ===")
-    print(confusion_matrix(y_true, y_pred), '\n')
+    cm = confusion_matrix(y_true, y_pred)
+    display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['negative', 'positive'])
+    display.plot(cmap=plt.cm.Blues)
+    plt.savefig(f'experiment-1/financial/results/ensemble_model_financial{dataset}_confusion_matrix.png')
 
     print("=== Classification Report ===")
     print(classification_report(y_true, y_pred, zero_division=0), '\n')

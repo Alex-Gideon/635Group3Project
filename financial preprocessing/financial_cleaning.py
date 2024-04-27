@@ -117,4 +117,4 @@ cleaned_df = pd.DataFrame(dict)
 
 cleaned_df.head(5)
 
-cleaned_df.to_csv('../experiment-1/financial/datasets/clean_financialfull_notnum.csv', index=False)
+cleaned_df.to_csv('../experiment-1/financial/datasets/clean_financialfull_notnum.csv', header=False, index=False)

@@ -1,0 +1,12 @@
+beautifulsoup4==4.12.3
+bs4==0.0.2
+keras==2.11.0
+libclang==18.1.1
+numpy==1.21.6
+protobuf==3.19.6
+soupsieve==2.4.1
+tensorflow==2.11.0
+tensorflow-estimator==2.11.0
+tensorflow-hub==0.16.0
+tensorflow-io-gcs-filesystem==0.34.0
+tensorflow-text==2.11.0

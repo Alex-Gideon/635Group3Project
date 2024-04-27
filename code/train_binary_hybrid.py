@@ -13,7 +13,7 @@ from sklearn.preprocessing import scale
 rowsx = []
 yx = []
 
-with open("twitter preprocessing/small_tweets_bilstm.csv", 'r', encoding='latin1') as csv1:
+with open("data/test_binary_hybrid_BiLSTM_data.csv", 'r', encoding='latin1') as csv1:
     # creating a csv reader object
     csvreader1 = csv.reader(csv1)
     # extracting each data row one by one
@@ -39,7 +39,7 @@ for i in range(0,len(yx)):
 rowsx1 = []
 
 
-with open("twitter preprocessing/small_tweets_ANN.csv", 'r', encoding='latin1') as csv1:
+with open("data/test_binary_hybrid_ANN_data.csv", 'r', encoding='latin1') as csv1:
     # creating a csv reader object
     csvreader1 = csv.reader(csv1)
     # extracting each data row one by one
@@ -137,4 +137,4 @@ model2.compile(optimizer=Adam(lr=1e-3),
               metrics=['accuracy'])
 
 model2.fit([x_train,x_train1], yx, epochs=10, batch_size=2000)
-model2.save("results/binary_hybrid_tweets.h5")
+model2.save("results/binary_hybrid_larger.h5")
