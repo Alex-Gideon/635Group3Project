@@ -5,6 +5,7 @@ from preprocess import *
 import random
 from sklearn.model_selection import train_test_split
 import keras
+import at_lstm_metric
 
 
 SEED = 42
@@ -58,3 +59,6 @@ if __name__ == '__main__':
               callbacks=[model_checkpoint_callback],)
  
     print('training done. model saved.')
+
+    at_lstm_metric.gather_training_metrics(X_test, y_test)
+    print('experiment results gathered. saved to /results')
