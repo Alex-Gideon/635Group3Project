@@ -1,9 +1,10 @@
 import time
 import pandas as pd
-import os
 import at_lstm
 from preprocess import *
 import random
+from sklearn.model_selection import train_test_split
+import keras
 
 
 SEED = 42
@@ -27,17 +28,33 @@ def get_training_data(sample_size=50):
 
 if __name__ == '__main__':
     start = time.time()
-    cleaned_texts, y_train = get_training_data(sample_size=4000)
+    cleaned_texts, sentiments = get_training_data(sample_size=50000)
 
-    x_train = provide_word_embeddings(cleaned_texts)
+    X_train, X_test, y_train, y_test = train_test_split(cleaned_texts, sentiments, 
+                                                         test_size=0.5)
+
+    X_train = provide_word_embeddings(X_train)
+    print('x train embeddings loaded')
+    X_test = provide_word_embeddings(X_test)
+    print('x test embeddings loaded')
+
     elapsed = time.time() - start
     print(f'data preparation time = {elapsed}; done.')
 
+    checkpoint_filepath = 'experiment-2/models/binary_atlstm.model.keras'
+    model_checkpoint_callback = keras.callbacks.ModelCheckpoint(
+        filepath=checkpoint_filepath,
+        monitor='val_accuracy',
+        mode='max',
+        save_best_only=True,
+    )
+
     model = at_lstm.build_model()
-    model.fit(x_train, y_train,
-              batch_size=100,
+    model.fit(X_train, y_train,
+              batch_size=512,
               epochs=10,
-              validation_split=0.3,
-              use_multiprocessing=True)
-    # TODO save best model
-    print('training done.')
+              validation_data=(X_test, y_test),
+              use_multiprocessing=True,
+              callbacks=[model_checkpoint_callback],)
+ 
+    print('training done. model saved.')
