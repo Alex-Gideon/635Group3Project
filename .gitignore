@@ -7,4 +7,4 @@ Testing/aclImdb
 Testing/aclImdb_v1.tar.gz
 /experiment-2/datasets/
 /experiment-2/models/
-*/__pycache__
+__pycache__
