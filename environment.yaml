@@ -1,4 +1,4 @@
-name: testing_env
+name: 535ProjectGroup3
 channels:
   - conda-forge
   - defaults
@@ -20,7 +20,7 @@ dependencies:
   - brotli-python=1.0.9=py37hd23a5d3_7
   - bzip2=1.0.8=hd590300_5
   - c-ares=1.27.0=hd590300_0
-  - ca-certificates=2024.2.2=hbcca054_0
+  - ca-certificates=2024.3.11=h06a4308_0
   - cachetools=5.3.3=pyhd8ed1ab_0
   - certifi=2024.2.2=pyhd8ed1ab_0
   - cffi=1.14.4=py37h11fe52a_0
@@ -121,7 +121,7 @@ dependencies:
   - oauthlib=3.2.2=pyhd8ed1ab_0
   - olefile=0.47=pyhd8ed1ab_0
   - openjpeg=2.5.0=h7d73246_0
-  - openssl=1.1.1w=hd590300_0
+  - openssl=1.1.1w=h7f8727e_0
   - opt_einsum=3.3.0=pyhc1e730c_2
   - packaging=23.2=pyhd8ed1ab_0
   - pandas=1.2.2=py37hdc94413_0
