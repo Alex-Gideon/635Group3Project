@@ -16,7 +16,8 @@ from keras_preprocessing.sequence import pad_sequences
 import numpy as np
 from gensim.models import Word2Vec
 from sklearn.feature_extraction.text import TfidfVectorizer
-
+import scikitplot
+import matplotlib.pyplot as plt
 
 stop_words = set(stopwords.words('english'))
 SEED = 42
@@ -144,4 +145,8 @@ if __name__ == '__main__':
 
     print("=== Classification Report ===")
     print(classification_report(y_true, y_pred, zero_division=0), '\n')
+    import scikitplot
+    import matplotlib.pyplot as plt
+    scikitplot.metrics.plot_confusion_matrix(y_true, y_pred, title='Hybrid Bi-LSTM and ANN model on Tweets Dataset Confusion Matrix')
+    plt.savefig("experiment-1/results/binary_tweets_hybrid_classified.png")
 
