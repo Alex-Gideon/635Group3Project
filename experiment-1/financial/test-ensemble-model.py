@@ -172,24 +172,27 @@ def get_testing_data(dataset):
 
 
 if __name__ == '__main__':
-    dataset = 0 # TODO CHANGE IF YOU WANT TO TEST A DIFF DATASET
-    bilstm_input, ann_input, y_true = get_testing_data(dataset)
+
     print('preprocessing done.')
 
     filepath = 'experiment-1/models/binary_hybrid_larger.h5'
     ensemble_model = load_model(filepath=filepath)
-    print('loaded the model')
-    print(bilstm_input.shape)
-    print(ann_input.shape)
 
-    y_pred = ensemble_model.predict([bilstm_input, ann_input])
-    y_pred = [0 if pred[0] < 0.5 else 1 for pred in y_pred]
+    for dataset in range(0,3):
+        bilstm_input, ann_input, y_true = get_testing_data(dataset)
+        print('preprocessing done.')
+        print('loaded the model')
+        print(bilstm_input.shape)
+        print(ann_input.shape)
 
-    cm = confusion_matrix(y_true, y_pred)
-    display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['negative', 'positive'])
-    display.plot(cmap=plt.cm.Blues)
-    plt.savefig(f'experiment-1/financial/results/ensemble_model_financial{dataset}_confusion_matrix.png')
+        y_pred = ensemble_model.predict([bilstm_input, ann_input])
+        y_pred = [0 if pred[0] < 0.5 else 1 for pred in y_pred]
 
-    print("=== Classification Report ===")
-    print(classification_report(y_true, y_pred, zero_division=0), '\n')
+        cm = confusion_matrix(y_true, y_pred)
+        display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['negative', 'positive'])
+        display.plot(cmap=plt.cm.Blues)
+        plt.savefig(f'experiment-1/financial/results/ensemble/ensemble_model_financial{dataset}_confusion_matrix.png')
+
+        print("=== Classification Report ===")
+        print(classification_report(y_true, y_pred, zero_division=0), '\n')
 
