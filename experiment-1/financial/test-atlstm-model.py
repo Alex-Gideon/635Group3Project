@@ -11,6 +11,14 @@ TESTING_DATASETS = [
 ]
 
 def provide_text_sentiment_df(dataset_idx=1):
+    """Collects CSV data from a filepath in TESTING_DATASETS.
+
+    Args:
+        dataset_idx (int, optional): Index of filepath element in TESTING_DATASETS. Defaults to 1.
+
+    Returns:
+        DataFrame: DataFrame representation of sentiment data in file.
+    """
     if dataset_idx == 1:
         df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1", header=None)
         df.columns = ['sentiment', 'text']
@@ -31,6 +39,15 @@ def provide_text_sentiment_df(dataset_idx=1):
     
 
 def get_testing_data(df):
+    """Performs multiple preprocessing steps:
+    Remove HTML tags, tokenize, remove stop words, get word embeddings, standardize labels.
+
+    Args:
+        df (DataFrame): Sentiment data from CSV
+
+    Returns:
+        ndarry, list[int]: word embeddings, standardized labels
+    """
 
     tokens = (df['text']
               .apply(preprocess.remove_html_tags)
@@ -44,14 +61,17 @@ def get_testing_data(df):
 
 
 if __name__ == '__main__':
+    # Load twitter sentiment data
     dataset_idx = 2
     dataset = provide_text_sentiment_df(dataset_idx=dataset_idx)
     X_test, y_test = get_testing_data(dataset)
 
+    # Load, Apply AT-LSTM model
     model = keras.models.load_model('experiment-2/models/binary_atlstm.model.keras')
     y_pred = model.predict(X_test)
     y_pred = [0 if pred[0] < 0.5 else 1 for pred in y_pred]
 
+    # Generate and save results
     cm = confusion_matrix(y_true=y_test, y_pred=y_pred)
     display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['negative', 'positive'])
     display.plot(cmap=plt.cm.Blues)
