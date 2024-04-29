@@ -2,6 +2,16 @@ import tensorflow as tf
 
 
 def build_model(INPUT_SEQUENCE_LEN=80, EMBEDDING_SIZE=200, show_summary=False):
+    """constructs the AT-LSTM model
+
+    Args:
+        INPUT_SEQUENCE_LEN (int, optional): maximum input sentence length. Defaults to 80.
+        EMBEDDING_SIZE (int, optional): embedding size of each word. Defaults to 200.
+        show_summary (bool, optional): flag to print summary of the model's architecture. Defaults to False.
+
+    Returns:
+        tf model: at-lstm model
+    """
     input_tensor = tf.keras.Input(shape=(INPUT_SEQUENCE_LEN, EMBEDDING_SIZE))
 
     lstm1_output = tf.keras.layers.LSTM(256, return_sequences=True)(input_tensor)
