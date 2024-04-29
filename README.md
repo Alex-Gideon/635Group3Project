@@ -53,12 +53,17 @@ It contains 3 folders.
 
 3) Move the contents from the foler named: Experiment 2 Models into experiment-2/models
 
-## Can't Download? Generate the models:
+## Can't Download? Train the models manually:
 
 
-In order to generated the binary_hybrid_larger.h5 model, run 
+The original model can be trained with: 
 ```shell
 python3 code/train_binary_hybrid.py
+```
+
+In order to generated the binary_hybrid_larger.h5 model, run this model is identical to the original papers however it is trained on the larger subset of data and tested on the smaller one, unlike the original papers.
+```shell
+python3 experiment-1/train_hybrid_binary_larger.py
 ``` 
 it will save the model to: results/binary_hybrid_larger.h5 move the .h5 file into the experiment-1/models folder.
 
@@ -69,9 +74,23 @@ Then run:
 python3 experiment-2/train_at_lstm.py
 ```
 
-Both of these may take 10 minutes to run.
+All of these may take 10 minutes to run each.
 
 # Running the models and Experiments
+
+## Original model:
+
+Train:
+
+```shell
+python3 code/train_binary_hybrid.py
+```
+
+Test:
+
+```shell
+python3 code/testBinaryHybrid.py
+```
 
 ## Experiment 1
 
