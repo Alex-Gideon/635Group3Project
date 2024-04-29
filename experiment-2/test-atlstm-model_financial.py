@@ -12,7 +12,13 @@ TESTING_DATASETS = [
 
 
 def gather_training_metrics(X_test, y_test,name = "test"):
-    
+    """Fits the model for a given set of input and output embeddings
+
+    Args:
+        X_test np array: array of inputs embedded vectors
+        y_test np array: array out outputs
+        name (str, optional): name of the output file and confusion matrix title. Defaults to "test".
+    """
     
     print("loading model..")
     model = keras.models.load_model('experiment-2/models/binary_atlstm.model.keras')
@@ -33,20 +39,30 @@ def gather_training_metrics(X_test, y_test,name = "test"):
     print(f'===Classification Report===\n {class_report}')
 
 def provide_text_sentiment_df(dataset_idx=1):
+    """Gets datasets from global, cleans them based on what is required for each.
+    
+
+    Args:
+        dataset_idx (int, optional): which dataset to get. Defaults to 1.
+
+    Returns:
+        dataframe: cleaned dataframe (standardized sentiments only)
+    """
+    #ugly hardcoded values but it works.
     if dataset_idx == 1:
         df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1", header=None)
         df.columns = ['sentiment', 'text']
         df = df[df['sentiment'] != 'neutral']
-        df['sentiment'] = df['sentiment'].str.lower()
-        df['sentiment'] = df['sentiment'].apply(preprocess.standardize)
+        df['sentiment'] = df['sentiment'].str.lower() #lowercase
+        df['sentiment'] = df['sentiment'].apply(preprocess.standardize) #standarize sentiments
         return df
     elif dataset_idx == 0:
         df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1")
         print(df.columns)
         df = df[['Headline', 'Final Status']]
         df.columns = ['text', 'sentiment']
-        df['sentiment'] = df['sentiment'].str.lower()
-        df['sentiment'] = df['sentiment'].apply(preprocess.standardize)
+        df['sentiment'] = df['sentiment'].str.lower() #lowercase
+        df['sentiment'] = df['sentiment'].apply(preprocess.standardize) #standardize sentiments
         return df
     elif dataset_idx == 2:
         df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1")
@@ -57,14 +73,21 @@ def provide_text_sentiment_df(dataset_idx=1):
     
 
 def get_testing_data(df):
+    """Cleans dataframe
 
-    tokens = (df['text']
+    Args:
+        df dataframe: dataset
+    Returns:
+        tuple(numpy array, numpy array): embeddings
+    """
+
+    tokens = (df['text'] #clean data
               .apply(preprocess.remove_html_tags)
               .apply(preprocess.tokenize)
               .apply(preprocess.remove_stop_words))
-    embeddings = preprocess.provide_word_embeddings(tokens)
+    embeddings = preprocess.provide_word_embeddings(tokens) #tokenize via the word embeddings
 
-    labels = df['sentiment']
+    labels = df['sentiment'] #rename the column...
     return embeddings, labels
     
 
@@ -73,8 +96,8 @@ if __name__ == '__main__':
 
     model = keras.models.load_model('experiment-2/models/binary_atlstm.model.keras')
     
-    for dataset_idx in range(len(TESTING_DATASETS)):
+    for dataset_idx in range(len(TESTING_DATASETS)): #loop through datasets, fit model
         dataset = provide_text_sentiment_df(dataset_idx=dataset_idx)
         X_test, y_test = get_testing_data(dataset)
-        gather_training_metrics(X_test,y_test,name = f"Financial_{dataset_idx}")
+        gather_training_metrics(X_test,y_test,name = f"Financial_{dataset_idx}") #fit model
     
