@@ -1,3 +1,6 @@
+"""train_hybrid_binary_larger.py
+"""
+
 import csv
 import numpy as np
 from keras.preprocessing.text import Tokenizer
@@ -13,6 +16,7 @@ from sklearn.preprocessing import scale
 rowsx = []
 yx = []
 
+# Load data for Bi-LSTM
 with open("data/test_binary_hybrid_BiLSTM_data.csv", 'r', encoding='latin1') as csv1:
     # creating a csv reader object
     csvreader1 = csv.reader(csv1)
@@ -39,6 +43,7 @@ for i in range(0,len(yx)):
 rowsx1 = []
 
 
+# Load data for ANN
 with open("data/test_binary_hybrid_ANN_data.csv", 'r', encoding='latin1') as csv1:
     # creating a csv reader object
     csvreader1 = csv.reader(csv1)
@@ -132,6 +137,7 @@ out = Dense(1,activation="sigmoid")(mix2)
 
 model2 = Model(inputs=[input_tensor,visible],outputs=out)
 
+# Compile and train the combined model
 model2.compile(optimizer=Adam(lr=1e-3),
               loss='binary_crossentropy',
               metrics=['accuracy'])

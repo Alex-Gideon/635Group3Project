@@ -1,3 +1,6 @@
+"""test-ensemble-model.py
+"""
+
 import os
 import pandas as pd
 import nltk
@@ -32,11 +35,25 @@ TESTING_DATASETS = [
 
 
 def tokenize(input_text):
+    """Tokenizes the sentence string into individual words
+    Args:
+        input_text (string): sentence string
+    Returns:
+        [str]: list of words (tokens)
+    """
+
     tokens = re.sub('[^a-zA-Z]', ' ', input_text).lower().split()
     return tokens
 
 
 def remove_stop_words(input_text_vector):
+    """Removes stop words from a list of words/tokens
+    Args:
+        input_text_vector ([str]): list of words/tokens
+    Returns:
+        [str]: tokens with no stop words
+    """
+
     filtered = []
     for word in input_text_vector:
         if word.isalpha() and word not in stop_words:
@@ -45,6 +62,14 @@ def remove_stop_words(input_text_vector):
 
 
 def get_hypernym(word):
+    """Retrieves the hypernym of a given token
+
+    Args:
+        word (str): token
+
+    Returns:
+        list[str]: hypernyms
+    """
     for hyps in wn.synsets(word):
         for hyp in hyps.hypernyms():
             return hyp.lemma_names()[0]
@@ -52,6 +77,13 @@ def get_hypernym(word):
 
 
 def standardize(input_label):
+    """Standardizes the labels such that 0:negative, 1:positive
+    Args:
+        input_label (str): string that is either negative or positive
+    Returns:
+        int: label
+    """
+
     if isinstance(input_label, int): return input_label
     input_label = input_label.strip().lower()
     labels = {
@@ -63,6 +95,15 @@ def standardize(input_label):
 
 
 def provide_embeddings_tfidf(texts):
+    """Generate word embeddings and calculate TF-IDF (Term Frequency-Inverse Document Frequency) scores for the given text.
+
+    Args:
+        texts (list): Texts to build embeddings for
+
+    Returns:
+        Word2Vec, dict: embeddings, tfidf
+    """
+    
     embeddings = Word2Vec(size=200, min_count=1)
     embeddings.build_vocab(texts)
     embeddings.train(texts,
@@ -79,6 +120,17 @@ def provide_embeddings_tfidf(texts):
 
 
 def encode_text_hypernyms(tfidf_map, word_embedding_model, text_hypernyms):
+    """Encode text hypernyms into a vector representation.
+
+    Args:
+        tfidf_map (dict): A dictionary mapping words to their TF-IDF scores.
+        word_embedding_model (Word2Vec): A trained Word2Vec model for word embeddings
+        text_hypernyms (list): A list of hypernyms to be encoded.
+
+    Returns:
+        ndarray: vector encoding of hypernyms
+    """
+
     EMBEDDING_SIZE = 200
     vector = np.zeros((1, EMBEDDING_SIZE))
     length = 0
@@ -96,6 +148,15 @@ def encode_text_hypernyms(tfidf_map, word_embedding_model, text_hypernyms):
 
 
 def provide_text_sentiment_df(dataset_idx=0):
+    """Reads different datasets based on the index provided and prepares DataFrame for text sentiment analysis.
+
+    Args:
+        dataset_idx (int, optional): Index of data to be used. Defaults to 0.
+
+    Returns:
+        DataFrame: text and sentiment columns
+    """
+
     if dataset_idx == 1:
         df = pd.read_csv(TESTING_DATASETS[dataset_idx], encoding="ISO-8859-1", header=None)
         df.columns = ['sentiment', 'text']
@@ -117,6 +178,15 @@ def provide_text_sentiment_df(dataset_idx=0):
 
 
 def get_testing_data(dataset):
+    """Prepare testing data for sentiment analysis
+
+    Args:
+        dataset (int): Index of the dataset
+
+    Returns:
+        _type_: BI-LSTM Test Data, ANN Test Data, Ground Truth
+    """
+    
     df = provide_text_sentiment_df(dataset_idx=dataset)
 
     # remove stop words

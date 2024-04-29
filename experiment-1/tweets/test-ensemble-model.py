@@ -31,6 +31,18 @@ TESTING_DATASETS = {
 }
 
 def read_data(datasets_dict):
+    """Read data from files based on a provided dictionary which maps keys to file paths.
+
+    Args:
+        datasets_dict (dict): Dictionary of various datasets
+
+    Raises:
+        ValueError: Error if invalid key is present in input dictionary
+
+    Returns:
+        dict: Dictionary of DataFrames
+    """
+
     dfs = {}
     for key, file_path in datasets_dict.items():
         if "bilstm" in key:
@@ -51,6 +63,15 @@ def read_data(datasets_dict):
     return dfs
 
 def provide_embeddings_tfidf(texts):
+    """Generate word embeddings and calculate TF-IDF (Term Frequency-Inverse Document Frequency) scores for the given text.
+
+    Args:
+        texts (list): Texts to build embeddings for
+
+    Returns:
+        Word2Vec, dict: embeddings, tfidf
+    """
+
     embeddings = Word2Vec(size=200, min_count=1)
     embeddings.build_vocab(texts)
     embeddings.train(texts,
@@ -67,6 +88,17 @@ def provide_embeddings_tfidf(texts):
 
 
 def encode_text_hypernyms(tfidf_map, word_embedding_model, text_hypernyms):
+    """Encode text hypernyms into a vector representation.
+
+        Args:
+            tfidf_map (dict): A dictionary mapping words to their TF-IDF scores.
+            word_embedding_model (Word2Vec): A trained Word2Vec model for word embeddings
+            text_hypernyms (list): A list of hypernyms to be encoded.
+
+        Returns:
+            ndarray: vector encoding of hypernyms
+        """
+
     EMBEDDING_SIZE = 200
     vector = np.zeros((1, EMBEDDING_SIZE))
     length = 0
@@ -84,6 +116,12 @@ def encode_text_hypernyms(tfidf_map, word_embedding_model, text_hypernyms):
 
 
 def print_dataframes(dataframes):
+    """Prints each DataFrame in the given dictionary
+
+    Args:
+        dataframes (dict): Dictionary of DataFrames
+    """
+
     for key, df in dataframes.items():
         print(f"DataFrame: {key}")
         print(df)
@@ -91,6 +129,15 @@ def print_dataframes(dataframes):
 
 
 def get_testing_data(df_dict):
+    """Prepare testing data for sentiment analysis
+
+    Args:
+        df_dict (dict): Dictionary of the dataset
+
+    Returns:
+        _type_: BI-LSTM Test Data, ANN Test Data, Ground Truth
+    """
+
     big_bilstm_df = pd.concat([df_dict["large_bilstm"], df_dict["small_bilstm"]], ignore_index=True)
     big_ann_df = pd.concat([df_dict["large_ann"], df_dict["small_ann"]], ignore_index=True)
     #print(big_bilstm_df.head(5))
