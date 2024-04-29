@@ -13,6 +13,14 @@ random.seed(SEED)
 
 
 def get_training_data(sample_size=50):
+    """gets training data for the at-lstm model
+
+    Args:
+        sample_size (int, optional): size of training data. Defaults to 50.
+
+    Returns:
+        pandas dataframe: pandas dataframe of the preprocessed training data
+    """
     filepath = 'experiment-2/datasets/IMDBDataset.csv'
     df = pd.read_csv(filepath)
     
