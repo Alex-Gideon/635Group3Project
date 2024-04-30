@@ -12,12 +12,13 @@ TWEETS_DATASETS = 'experiment-1/tweets/datasets/atlstm_tweets.csv'
 
 
 def gather_training_metrics(X_test, y_test,name = "test"):
+    """Fits the model for a given set of input and output embeddings
 
-    # cleaned_texts, sentiments = train_at_lstm.get_training_data(sample_size=50000)
-
-    # X_train, X_test, y_train, y_test = train_test_split(cleaned_texts, sentiments, 
-    #                                                      test_size=0.5)
-    
+    Args:
+        X_test np array: array of inputs embedded vectors
+        y_test np array: array out outputs
+        name (str, optional): name of the output file and confusion matrix title. Defaults to "test".
+    """
     
     
     print("loading model..")
@@ -41,40 +42,57 @@ def gather_training_metrics(X_test, y_test,name = "test"):
 
 
 def provide_word_embeddings_fast(text_sequences, wv):
+    """quickly generate word embeddings in batches
+
+    Args:
+        text_sequences (_type_): a list of sequences (usually a dataframe) of text to be embedded
+        wv wordvec model: the word vector model for embeddings
+
+    Returns:
+        np array: embedded vector
+    """
     sequence_max_len = 80
     num_sequences = len(text_sequences)
-    word_embeddings = np.zeros((num_sequences, sequence_max_len, wv.vector_size))
+    word_embeddings = np.zeros((num_sequences, sequence_max_len, wv.vector_size)) #predefine the embeddings.
     
     missing_words = set()
     for i, seq in tqdm(enumerate(text_sequences), total=num_sequences):
         vector = []
         for word in seq:
             if word in wv:
-                vector.append(wv[word])
+                vector.append(wv[word]) #get embedding and append
             else:
                 missing_words.add(word)
-                vector.append([0.0] * wv.vector_size)
+                vector.append([0.0] * wv.vector_size) #if no embedding exists
         
-        vector += [[0.0] * wv.vector_size for _ in range(sequence_max_len - len(vector))]
-        word_embeddings[i] = vector[:sequence_max_len]
+        vector += [[0.0] * wv.vector_size for _ in range(sequence_max_len - len(vector))] #batch additions
+        word_embeddings[i] = vector[:sequence_max_len] #batch additions
     
     print("Stopped")
     if missing_words:
-        print(f"Missing words: {missing_words}")
+        print(f"Missing words: {missing_words}") #any missing words.
     
     return word_embeddings
 
 def get_testing_data(df):
+    """Cleans the data and embedds the data returning the embeddings and labels
+
+    Args:
+        df dataframe: dataset
+
+    Returns:
+        tuple(numpy array, numpy array): embeddings, labels
+    """
     print("Tokenizing")
-    tokens = (df['review']
+    tokens = (df['review'] #applies the cleaning functions
               .apply(preprocess.remove_html_tags)
               .apply(preprocess.tokenize)
               .apply(preprocess.remove_stop_words))
     print("Embedding...")
-    wv = KeyedVectors.load('experiment-2/models/w2v.glove.model')
+    wv = KeyedVectors.load('experiment-2/models/w2v.glove.model') #load model
     embeddings = provide_word_embeddings_fast(tokens,wv)
     print("fixing labels")
-    labels = df['sentiment'].apply(preprocess.standardize) #i doint think we need this..?
+    labels = df['sentiment'].apply(preprocess.standardize) #standardize labels.
     
     return embeddings, labels
     
